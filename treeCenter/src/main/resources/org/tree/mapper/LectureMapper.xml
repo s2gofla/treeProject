@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="org.tree.mapper.LectureMapper">
+  
+  	<sql id="criteria">
+  		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+  			<foreach item="type" collection="typeArr">
+  				<trim prefix="OR">
+  					<choose>
+  						<when test="type =='T'.toString()">
+  							l_title like '%' ||#{keyword}||'%'
+  						</when>
+  						<when test="type =='C'.toString()">
+  							l_content like '%' ||#{keyword}||'%'
+  						</when>
+  						<when test="type =='W'.toString()">
+  							lecturer like '%' ||#{keyword}||'%'
+  						</when>  						
+  					</choose>
+  				</trim>
+  			
+  			</foreach>		
+  			</trim>	
+  	</sql>
+  
+  	<select id="getList" resultType="org.tree.domain.LectureVO">
+  		<![CDATA[
+  			select l_code, l_title, l_date, l_time, l_loc, lecturer, l_img, c_code, c_name
+  			from
+  				(
+  				select /*+INDEX_DESC(lecture pk_lecture) */
+  					rownum rn, l_code, l_title, l_date, l_time, l_loc, lecturer, l_img, l.c_code, c_name
+  				from
+  					lecture l join category c on l.c_code = c.c_code
+  				where
+  			]]>	
+  			
+  		<include refid="criteria"></include>	
+  		<![CDATA[
+  				 rownum <= #{pageNum} * #{amount}
+  				)	
+  			where rn > (#{pageNum}-1) * #{amount}
+  		
+  		]]>
+  	</select>
+  	
+  	<select id="getTotalCount" resultType="Integer">
+  		select count(*) from lecture where
+  		
+  		<include refid="criteria"></include>
+  		 l_code > 0
+  	</select>
+  	
+  	<select id="getCategory" resultType="org.tree.domain.LectureCategoryVO">
+  		select c_code, c_name from category
+  	
+  	</select>
+  	
+  	<select id="read" resultType="org.tree.domain.LectureVO">
+  		select * from lecture where l_code = #{l_code}
+  	</select>
+
+  </mapper>

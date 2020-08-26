@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="org.tree.mapper.ReviewMapper">
+  
+  	<sql id="criteria">
+  		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+  			<foreach item="type" collection="typeArr">
+  				<trim prefix="OR">
+  					<choose>
+  						<when test="type =='T'.toString()">
+  							rev_title like '%' ||#{keyword}||'%'
+  						</when>
+  						<when test="type =='C'.toString()">
+  							rev_content like '%' ||#{keyword}||'%'
+  						</when>
+  						<when test="type =='W'.toString()">
+  							username like '%' ||#{keyword}||'%'
+  						</when>  						
+  					</choose>
+  				</trim>
+  			
+  			</foreach>		
+  			</trim>	
+  	</sql>
+  
+  	<select id="getList" resultType="org.tree.domain.ReviewVO">
+  		<![CDATA[
+  			select rev_code, rev_title, username, rev_regdate, rev_hit
+  			from
+  				(
+  				select /*+INDEX_DESC(review pk_review) */
+  					rownum rn, rev_code, rev_title, username, rev_regdate, rev_hit
+  				from
+  					review
+  				where
+  			]]>	
+  			
+  		<include refid="criteria"></include>	
+  		<![CDATA[
+  				 rownum <= #{pageNum} * #{amount}
+  				)	
+  			where rn > (#{pageNum}-1) * #{amount}
+  		
+  		]]>
+  	</select>
+  	
+  	<select id="getTotalCount" resultType="Integer">
+  		select count(*) from board where
+  		
+  		<include refid="criteria"></include>
+  		 b_code > 0
+  	</select>
+	
+	<insert id="insertSelectKey">
+		<selectKey keyProperty="b_code" order="BEFORE" resultType="Integer">
+		select b_code_seq.nextval from dual
+		</selectKey>
+		
+		insert into board values(#{b_code} ,#{b_title}, sysdate , 0 , #{b_img,jdbcType=VARCHAR} , #{username}, #{b_content})
+	
+	</insert>  
+  
+  	<select id="read" resultType="org.tree.domain.ReviewVO">
+  		select * from board where b_code = #{b_code}
+  	</select>
+  	
+  	<update id="update">
+  		update board
+  		set b_title = #{b_title},
+  		b_content = #{b_content},
+  		b_regdate = sysdate
+  		where b_code= #{b_code}
+  	</update>
+  	
+  	<delete id="delete">
+  		delete from board where b_code = #{b_code}
+  	</delete>
+  </mapper>

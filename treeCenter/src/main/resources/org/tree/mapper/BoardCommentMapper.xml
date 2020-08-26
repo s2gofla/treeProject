@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="org.tree.mapper.BoardCommentMapper">
+  	
+  	<insert id="insert">
+  		insert into board_comment values(bc_code_seq.nextval, #{username}, #{bc_content}, sysdate, #{b_code}, bc_code_seq.nextval, 0, 0 )
+  	</insert>
+  	
+  	<select id="read" resultType="org.tree.domain.BoardCommentVO">
+  		select * from board_comment where b_code = #{b_code} order by bc_ref desc, bc_step asc
+  	</select>
+  	
+  	<delete id="delete">
+  		delete from board_comment where bc_code = #{bc_code}
+  	</delete>
+  	
+  	<update id="update">
+  		update board_comment
+  		set bc_content=#{bc_content}, bc_regdate = sysdate
+  		where bc_code = #{bc_code}
+  	
+  	</update>
+  	
+  </mapper>
