@@ -6,10 +6,12 @@ import org.springframework.stereotype.Service;
 import org.tree.domain.BoardCommentVO;
 import org.tree.mapper.BoardCommentMapper;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j;
 
 @Service
 @Log4j
+@AllArgsConstructor
 public class BoardCommentServiceImpl implements BoardCommentService {
 
 	private BoardCommentMapper mapper;
@@ -22,11 +24,14 @@ public class BoardCommentServiceImpl implements BoardCommentService {
 
 	@Override
 	public List<BoardCommentVO> getList(int b_code) {
-		
+		System.out.println(b_code);
 		log.info("boardComment Service..list");
 		
 		
 		return mapper.read(b_code);
+		
+		
+	
 	}
 
 	@Override

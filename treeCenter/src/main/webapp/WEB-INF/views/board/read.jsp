@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="/resources/js/boardComment.js"></script>
 <script>
 	$(function() {
 	
@@ -21,6 +22,16 @@
 			operForm.find("#b_code").remove();
 			operForm.attr("action","/board/list");
 			operForm.submit();
+		});
+		
+		//댓글 목록 처리
+		var b_codeValue ='<c:out value="${board.b_code}"/>';
+
+		commentService.getList({b_code : b_codeValue}, function(list){
+			
+			for (var i = 0, len = list.length||0; i < len; i++) {
+				 console.log(list[i]);
+			}
 		});
 		
 	});
