@@ -26,17 +26,44 @@
 		
 		//댓글 목록 처리
 		var b_codeValue ='<c:out value="${board.b_code}"/>';
-
-		commentService.getList({b_code : b_codeValue}, function(list){
-			
-			for (var i = 0, len = list.length||0; i < len; i++) {
-				 console.log(list[i]);
-			}
-		});
+		var commentUl = $(".chat");
 		
-	});
+		showList();
+		
+		function showList() {
+			commentService.getList({b_code : b_codeValue}, function(list){
+				var str = "";
+				
+				if (list == null || list.length ==0) {
+					commentUl.html("");
+				
+					return;
+				}
+				
+				for (var i = 0, len = list.length||0; i < len; i++) {
+					
+					
+				str += '<li class="" data-bc_code="'+list[i].bc_code+'">';
+				str += '<div class="flex-col">';
+				str += '<div class="head">';
+				str += '<strong class="left">'+list[i].username+'</strong>';
+				str += '<small class="right">'+commentService.displayTime(list[i].bc_regdate)+'</small></div>';
+				str += '<div class="body-text"><p>'+list[i].bc_content+'</p></div></div></li>';
+				}
+			
+				commentUl.html(str);
+				
+			});//end getList
+		}//end showList
+
+		
+		
+	}); //function end
+	
 	
 </script>
+
+
 <!-- Table -->
 <h2>글보기</h2>
 
@@ -75,4 +102,28 @@
 		<input type="hidden" name="amount" value='<c:out value="${cri.amount }"/>' />
 		<input type="hidden" name="keyword" value='<c:out value="${cri.keyword }"/>' />
 		<input type="hidden" name="type" value='<c:out value="${cri.type }"/>' />
-	</form>	
+	</form>
+
+<div class="commentBoard flex-col">
+	<div class="commentHead">
+		<h3 class="left">댓글보기</h3>
+		<button class="right button small">댓글쓰기</button>
+	</div>
+	<div class="commentBody">
+		<ul class="chat alt">
+			<!-- start comment  -->
+			<li class="" data-bc_code=''>
+				<div class="flex-col">
+					<div class="head">
+						<strong class="left">username</strong> <small class="right">날짜</small>
+					</div>
+					<div class="body-text">
+						<p>내용</p>
+					</div>
+				</div>
+			</li>
+			<!-- end comment  -->
+		</ul>
+
+	</div>
+</div>

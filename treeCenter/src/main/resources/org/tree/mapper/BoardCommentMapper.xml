@@ -10,7 +10,7 @@
   	</insert>
   	
   	<select id="read" resultType="org.tree.domain.BoardCommentVO">
-  		select * from board_comment where b_code = #{b_code} order by bc_ref desc, bc_step asc
+  		select bc_code, username, bc_content, TO_CHAR(bc_regdate, 'RRRR-MM-DD HH24:MI:SS') as "bc_regdate" , b_code, bc_ref, bc_step, bc_depth from board_comment where b_code = #{b_code} order by bc_ref desc, bc_step asc
   	</select>
   	
   	<delete id="delete">

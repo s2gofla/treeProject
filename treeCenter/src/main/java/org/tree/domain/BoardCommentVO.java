@@ -1,6 +1,6 @@
 package org.tree.domain;
 
-import java.sql.Date;
+import java.util.Date;
 
 import lombok.Data;
 

@@ -40,6 +40,7 @@ public class BoardCommentController {
 	public ResponseEntity<List<BoardCommentVO>> list(@PathVariable("b_code")int b_code) {
 	
 		log.info("list....");
+	
 		return new ResponseEntity<>(service.getList(b_code), HttpStatus.OK);
 	}
 		
