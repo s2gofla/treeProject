@@ -2288,6 +2288,10 @@ button,
 	float: right;
 }
 
+.justify-right {
+	justify-content: flex-end;
+}
+
 .flex-col {
 	display: flex;
 	flex-direction: column;
@@ -2295,4 +2299,11 @@ button,
 
 .flex {
 	display: flex;
+}
+
+.button-none {
+	margin-left : 12px;
+	font-size : 0.9em;
+	color: black;
+	cursor: pointer;
 }

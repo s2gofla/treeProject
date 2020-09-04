@@ -18,32 +18,34 @@ public class BoardCommentServiceImpl implements BoardCommentService {
 	
 	@Override
 	public int register(BoardCommentVO boardCom) {
-		// TODO Auto-generated method stub
-		return 0;
+		log.info("comment register..");
+		return mapper.insert(boardCom);
 	}
 
 	@Override
 	public List<BoardCommentVO> getList(int b_code) {
-		System.out.println(b_code);
+
 		log.info("boardComment Service..list");
 		
 		
-		return mapper.read(b_code);
-		
-		
+		return mapper.read(b_code);		
 	
 	}
 
 	@Override
-	public boolean update(BoardCommentVO boardCom) {
-		// TODO Auto-generated method stub
-		return false;
+	public int update(BoardCommentVO boardCom) {
+		
+		log.info("update");
+		
+		return mapper.update(boardCom);
 	}
 
 	@Override
-	public boolean delete(int bc_code) {
-		// TODO Auto-generated method stub
-		return false;
+	public int delete(int bc_code) {
+		
+		log.info("delete .... ");
+		
+		return mapper.delete(bc_code);
 	}
 
 }

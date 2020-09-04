@@ -7,7 +7,10 @@
 		<title>Editorial by HTML5 UP</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<link rel="stylesheet" href="/resources/assets/css/main.css?var=3" />
+		
+		<!--bootstrap  -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="/resources/assets/css/main.css?var=5" />
 	</head>
 	<body class="is-preload">
 
@@ -28,7 +31,7 @@
 			</div>	
 	
 <!-- Scripts -->
-			<script src="/resources/assets/js/jquery.min.js"></script>
+			
 			<script src="/resources/assets/js/browser.min.js"></script>
 			<script src="/resources/assets/js/breakpoints.min.js"></script>
 			<script src="/resources/assets/js/util.js"></script>

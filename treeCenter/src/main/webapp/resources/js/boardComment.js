@@ -2,9 +2,29 @@
  
  var commentService = (function(){
  
- 	function add(reply, callback, error) {
- 		console.log("list..")	
- 	}
+ 	function add(comment, callback, error) {
+			console.log("comment insert..")
+			
+			$.ajax({
+			
+				type: "post",
+				url : "/comment/new",
+				data : JSON.stringify(comment),
+				contentType: "application/json; charset=utf-8",
+				success: function(result, status, xhr) {
+					if (callback) {
+						callback(result);
+					}
+				},
+				error: function (xhr, status, er) {
+					if (error) {
+						error(er);
+					}
+				}
+				
+			});
+			
+		};
 	
 	function getList(param, callback, error) {
 		var b_code = param.b_code;
@@ -47,9 +67,54 @@
 
 	};
 	
-	return {
+	function remove(bc_code, callback, error ) {
+			
+			$.ajax({
+				
+				type : "delete",
+				url : "/comment/" + bc_code,
+				success : function(deleteResult, status, xhr) {
+					if (callback) {
+						callback(deleteResult);
+					}
+				},
+				
+				error : function(xhr, status, er) {
+					if (error) {
+						error(er);
+					}
+				}
+				
+				
+			});
+		}
 		
+	function update(comment, callback, error) {
+		
+		$.ajax({
+			
+			type : 'put',
+			url : "/comment/" + comment.bc_code,
+			data : JSON.stringify(comment),
+			contentType: "application/json; charset=utf-8",
+			success: function(result, status, xhr) {
+				if (callback) {
+					callback(result);
+				}
+			},
+			error: function(xhr, status, er) {
+				if (error) {
+					error(er);
+				}
+			}
+		});
+	}	
+	return {
+	
+		add : add,
 		getList : getList,
+		remove : remove,
+		update : update,
 		displayTime : displayTime
 		
 	};
