@@ -2307,3 +2307,10 @@ button,
 	color: black;
 	cursor: pointer;
 }
+
+.uploadBox {
+	
+	list-style: none;
+	background: #909496;
+	color: black;
+}
