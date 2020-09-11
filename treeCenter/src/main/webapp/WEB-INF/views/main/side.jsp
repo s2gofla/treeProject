@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>    
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>    
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>     
 <!-- Sidebar -->
 <div id="sidebar">
@@ -11,7 +13,34 @@
 				<input type="text" name="query" id="query" placeholder="Search" />
 			</form>
 		</section>
-
+		
+		<!-- login/logout-->
+		<section>
+			<header class="major">
+				<h2>Login</h2>
+			</header>
+			<div class="mini-posts">
+				<!-- <article>
+					<a href="#" class="image"><img src="/resources/images/pic07.jpg" alt="" /></a>
+					<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper
+						dolore aliquam.</p>
+				</article> -->
+			</div>
+			<ul class="actions">
+				<li>
+				<sec:authorize access="isAnonymous()">
+				<a href="/login/login" class="button">login</a>				
+				<a href="#" class="button">sign</a>			
+				</sec:authorize>
+				
+				<sec:authorize access="isAuthenticated()">
+				<a href="#" class="button">logout</a>	
+				</sec:authorize>
+				</li>
+			</ul>
+		</section>
+		
+		
 		<!-- Menu -->
 		<nav id="menu">
 			<header class="major">
@@ -29,33 +58,7 @@
 				<li><a href="/myPage/list">MyPage</a></li>
 		</nav>
 
-		<!-- Section -->
-		<section>
-			<header class="major">
-				<h2>Ante interdum</h2>
-			</header>
-			<div class="mini-posts">
-				<article>
-					<a href="#" class="image"><img src="/resources/images/pic07.jpg" alt="" /></a>
-					<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper
-						dolore aliquam.</p>
-				</article>
-				<article>
-					<a href="#" class="image"><img src="/resources/images/pic08.jpg" alt="" /></a>
-					<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper
-						dolore aliquam.</p>
-				</article>
-				<article>
-					<a href="#" class="image"><img src="/resources/images/pic09.jpg" alt="" /></a>
-					<p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper
-						dolore aliquam.</p>
-				</article>
-			</div>
-			<ul class="actions">
-				<li><a href="#" class="button">More</a></li>
-			</ul>
-		</section>
-
+		
 		<!-- Section -->
 		<section>
 			<header class="major">
