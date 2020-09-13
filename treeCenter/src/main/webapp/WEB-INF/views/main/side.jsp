@@ -29,8 +29,8 @@
 			<ul class="actions">
 				<li>
 				<sec:authorize access="isAnonymous()">
-				<a href="/login/login" class="button">login</a>				
-				<a href="#" class="button">sign</a>			
+				<a href="/member/login" class="button">Login</a>				
+				<a href="/member/signUp" class="button">SignUp</a>			
 				</sec:authorize>
 				
 				<sec:authorize access="isAuthenticated()">

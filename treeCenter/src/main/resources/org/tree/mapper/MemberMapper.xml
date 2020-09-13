@@ -25,4 +25,12 @@
 		FROM users m LEFT OUTER JOIN authorities a on m.username = a.username where m.username = #{username}                                                                                                                        
 	</select>
 	
+	<insert id="insertMember" >
+		insert into users values (#{username}, #{password}, #{name}, #{phone}, #{email}, #{enabled})
+	</insert>
+	
+	<insert id="insertAuth" >
+		insert into authorities values (authorities_seq.nextval, #{username}, #{authority})
+	</insert>
+	
   </mapper>
