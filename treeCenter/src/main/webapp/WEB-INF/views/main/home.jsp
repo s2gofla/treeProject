@@ -7,7 +7,7 @@
 	
 		const success = "${success}" 
 		
-		if (success != null) {
+		if (success != "") {
 			alert(success);
 		}
 		

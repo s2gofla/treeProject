@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <script
   src="https://code.jquery.com/jquery-3.5.1.js"
   integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
@@ -112,14 +113,15 @@ $(function() {
 
 <!--board  -->
 <form role="form" action="/board/write" method="post" enctype="multipart/form-data">
+<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		<div class="form-group">
 			<div>
 				<label>title</label>
 				<input name="b_title"/>
 			</div>
-			<div>
+		<div>
 				<label>writer</label>
-				<input name="username" value="admin"/>
+				<input name="username" value='<sec:authentication property="principal.username"/>' readonly="readonly"/>
 			</div>			
 			<div>
 				<label>text area</label>

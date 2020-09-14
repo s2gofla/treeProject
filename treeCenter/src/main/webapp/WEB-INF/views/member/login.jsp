@@ -3,17 +3,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>    
 <script>
 	
-	$(function() {
-	
-		$("#login").on("click", function(e) {
-			
-			e.preventDefault();
-			// $("form").submit();
-		});
-		
-	});
-	
-
 </script>
  <h2>로그인 페이지</h2>
 
@@ -34,8 +23,11 @@
  		<input type="password" name="password" />
  	</div>
  	<div>
+ 		<input type="checkbox" id="remember-me" name="remember-me"/>
+ 		<label for="remember-me">자동로그인</label> 	
+ 	</div>
+ 	<div>
  		<input type="submit" value="로그인" />
- 		<a href="/" class="button primary" id="login">로그인</a>
  	</div>
  	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
  </form>

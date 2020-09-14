@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script>
 $(function() {
@@ -47,6 +48,7 @@ $(function() {
 
 <!--board  -->
 <form role="form" action="/board/update" method="post">
+<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 		<div class="form-group">
 			<div>
 				<label>title</label>
@@ -59,8 +61,13 @@ $(function() {
 			<div>
 				<label>text area</label>
 				<textarea rows="3" name="b_content"><c:out value="${board.b_content }"></c:out></textarea>
-			</div>		
+			</div>
+			<sec:authentication property="principal" var="pinfo"/>
+			<sec:authorize access="isAuthenticated()">
+			<c:if test="${pinfo.username eq board.username }">		
 			<button type="submit" data-oper="update">작성완료</button>
+			</c:if>
+			</sec:authorize>	
 			<button type="submit" id="listbtn" data-oper="list">글목록</button>
 		</div>
 			

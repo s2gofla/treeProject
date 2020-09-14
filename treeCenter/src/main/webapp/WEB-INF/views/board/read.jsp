@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
@@ -194,9 +195,14 @@
 			<div>
 				<label>text area</label>
 				<textarea rows="3" name="b_content" readonly="readonly"><c:out value="${board.b_content}"/></textarea>
-			</div>		
+			</div>
+			<sec:authentication property="principal" var="pinfo"/>
+			<sec:authorize access="isAuthenticated()">
+			<c:if test="${pinfo.username eq board.username }">
 			<button data-oper='update' class="button primary">글 수정하기</button>
 			<button data-oper='delete' class="button primary">글 삭제하기</button>
+			</c:if>
+			</sec:authorize>		
 			<button id="listBtn" class="button primary">글 목록</button>
 		</div>
 		
@@ -211,7 +217,9 @@
 <div class="commentBoard flex-col">
 	<div class="commentHead">
 		<h3 class="left">댓글보기</h3>
+		<sec:authorize access="isAuthenticated()">
 		<button class="right button small" id="commentBtn">댓글쓰기</button>
+		</sec:authorize>
 	</div>
 	<div class="new-comment box" style="display: none;">
 			<div>

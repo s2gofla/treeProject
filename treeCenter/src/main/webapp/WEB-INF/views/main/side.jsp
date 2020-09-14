@@ -34,7 +34,11 @@
 				</sec:authorize>
 				
 				<sec:authorize access="isAuthenticated()">
-				<a href="#" class="button">logout</a>	
+				<form action="/member/logout" method="post">
+				<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+				<button class="button">logout</button>
+				</form>
+				
 				</sec:authorize>
 				</li>
 			</ul>

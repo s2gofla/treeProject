@@ -12,7 +12,9 @@
 	
 	<security:intercept-url pattern="/board/write" access="hasRole('ROLE_MEMBER')"/>
 	
-	<security:form-login login-page="/login/login"/>
+	<security:form-login login-page="/member/login"/>
+	<security:logout logout-url="/member/logout" invalidate-session="true" delete-cookies="remember-me, JSESSIONID"/>
+	<security:remember-me data-source-ref="dataSource" token-validity-seconds="604800"/>
 	
 </security:http>
 
