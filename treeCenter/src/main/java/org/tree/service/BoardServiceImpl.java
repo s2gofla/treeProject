@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.tree.domain.BoardVO;
 import org.tree.domain.Criteria;
+import org.tree.mapper.BoardAttachMapper;
 import org.tree.mapper.BoardMapper;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +21,7 @@ public class BoardServiceImpl implements BoardService {
 	
 	
 	private BoardMapper mapper;
-	
+	private BoardAttachMapper attachMapper;
 	
 	@Override
 	public List<BoardVO> getList(Criteria cri) {
@@ -37,13 +39,22 @@ public class BoardServiceImpl implements BoardService {
 		return mapper.getTotalCount(cri);
 	}
 
-
+	@Transactional
 	@Override
 	public void register(BoardVO board) {
 		
-		log.info("service register...");
-		
+		log.info("service register..."+board);
 		mapper.insertSelectKey(board);
+		
+		if (board.getAttachList() == null || board.getAttachList().size() <= 0) {
+			return;
+		}
+		
+		board.getAttachList().forEach(attach -> {
+			attach.setB_code(board.getB_code());
+			attachMapper.insert(attach);
+		});
+		
 		
 	}
 

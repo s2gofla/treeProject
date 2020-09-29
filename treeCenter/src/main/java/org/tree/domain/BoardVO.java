@@ -1,6 +1,7 @@
 package org.tree.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -16,6 +17,8 @@ public class BoardVO {
 	private String b_img;
 	private String username;
 	private String b_content;
+	
+	private List<BoardAttachVO> attachList;
 	
 	
 	

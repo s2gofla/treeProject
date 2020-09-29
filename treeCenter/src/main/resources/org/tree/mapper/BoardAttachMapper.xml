@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <mapper namespace="org.tree.mapper.BoardAttachMapper">
+	
+	<insert id="insert">
+	insert into board_attach(uuid, uploadPath, fileName, filetype, b_code) 
+	values(#{uuid},#{uploadPath},#{fileName},#{filetype},#{b_code})
+	</insert>
+	
+	<delete id="delete">
+	delete from board_attach where uuid = #{uuid}
+	</delete>
+	
+	<select id="findByB_code" resultType="org.tree.domain.BoardAttachVO">
+	select * from board_attach where b_code = #{b_code}
+	</select>
+	
+  </mapper>

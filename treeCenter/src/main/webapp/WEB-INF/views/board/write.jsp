@@ -56,17 +56,18 @@ $(function() {
 	});
 	 
 	var cloneObj =$(".uploadDiv").clone();
-	 
+	
+	//파일 등록
 	$("input[type='file']").change(function(e) {
 	
-		
+		console.log("change완료")
 	
 		var formData = new FormData();
 		
 		
 		var inputFile = $("input[name='uploadFile']");
 		var files = inputFile[0].files;
-		console.log(files)
+		
 		
 		for (var i = 0; i < files.length; i++) {
 			
@@ -88,7 +89,7 @@ $(function() {
 			dataType: 'json',
 			success : function(result) {
 				console.log(result);
-				showUploadedFile(result);
+				showUploadedFile(result); //업로드 결과 처리 함수
 				$(".uploadDiv").html(cloneObj.html());
 			}
 		});//ajax
@@ -99,30 +100,99 @@ $(function() {
 	var uploadResult = $(".uploadResult ul");
 	
 	 function showUploadedFile(uploadResultArr) {
+		 
+		 if (!uploadResultArr || uploadResultArr.length == 0) {
+			return;
+		}
+		 
 		var str = "";
 		$(uploadResultArr).each(function (i, obj) {
 		
 			if (!obj.image) {
 			
-			var fileCallPath = encodeURIComponent(obj.uploadPath+"/"+obj.uuid+"_"+obj.fileName);
-			str += "<li>"+"<a href='/download?fileName="+fileCallPath+"'>"
-			+"<img src='/resources/images/document.png'>" + obj.fileName + "</a></li>";
+			var fileCallPath = encodeURIComponent(obj.uploadPath+"/"+obj.uuid+"_"+obj.fileName);			
+			var fileLink = fileCallPath.replace(new RegExp(/\\/g),"/");
+			
+			str += "<li data-path='"+obj.uploadPath+"' data-uuid='"+obj.uuid+"' data-fileName='"+obj.fileName+"'";
+			str += " data-type='"+obj.image+"'><div>";
+			str += "<span>"+obj.fileName+"</span>";
+			str += "<button type='button' data-file=\'"+fileCallPath+"\' data-type='image' style='box-shadow:0 0 black;'>";
+			str += "<a href='/download?fileName="+fileCallPath+"'>";
+			str += "<img src='/resources/images/document.png' style='width: 30t px'  ></a>";
+			str += "</div></li>";
 			}else {
 				//str += "<li>" + obj.fileName + "</li>";
 				var fileCallPath = encodeURIComponent(obj.uploadPath+"/s_"+obj.uuid+"_"+obj.fileName);
 				var orignPath = obj.uploadPath + "\\" + obj.uuid + "_" + obj.fileName;
+				
 				orignPath = orignPath.replace(new RegExp(/\\/g),"/");
 				
-				str += "<li>"+"<a href=\"javascript:showImage(\'"+orignPath+"\')\"><img src='/display?fileName="
-						+fileCallPath+"''></a><li>";
+				str += "<li data-path='"+obj.uploadPath+"' data-uuid='"+obj.uuid+"' data-filename='"+obj.fileName+"'";
+				str += " data-type='"+obj.image+"'><div>";
+				str += "<span>"+obj.fileName+"</span>";
+				str += "<button type='button' data-file=\'"+fileCallPath+"\' data-type='image' style='box-shadow:0 0 black'>";
+				str += "<img src='/resources/images/remove.png' style='width:30px'></button><br>";
+				str += "<a href=\"javascript:showImage(\'"+orignPath+"\')\"><img src='/display?fileName="
+						+fileCallPath+"''></a>";
+				str += "</div></li>";
 			}
 			
 		});
 		
 		uploadResult.append(str);
 	}
+	
+	 
+	 //파일삭제
+	 $(".uploadResult").on("click","button",function(e){
+		
+		 var targetFile = $(this).data("file");
+		 var type = $(this).data("type");
+		 var targetLi = $(this).closest("li");
+		 console.log(targetFile);
+		
+		 $.ajax({
+			 
+			 url:'/deleteFile',
+			 data:{fileName: targetFile, type:type},
+			 dataType: 'text',
+			 type:'post',
+			 success: function (result) {
+				alert(result);
+				targetLi.remove();
+			}
+			 
+			 
+		 }); //ajax
+		 
+	 });
+	
+	 //파일 전송
+	 var formObj = $("form[role='form']");
+	 
+	 $("button[type='submit']").on("click",function(e) {
+			e.preventDefault();
+			console.log("이벤트 막음완료");
+			var str = "";
 			
-
+			$(".uploadResult ul li").each(function(i, obj) {
+				
+				var jobj = $(obj);
+				
+				console.dir(jobj);
+				
+				str +="<input type='hidden' name='attachList["+i+"].fileName' value='"+jobj.data("filename")+"'>";
+				str +="<input type='hidden' name='attachList["+i+"].uuid' value='"+jobj.data("uuid")+"'>";
+				str +="<input type='hidden' name='attachList["+i+"].uploadPath' value='"+jobj.data("path")+"'>";
+				str +="<input type='hidden' name='attachList["+i+"].filetype' value='"+jobj.data("type")+"'>";
+				
+				console.log(str);
+				
+			});
+			
+			formObj.append(str).submit();
+	 });
+	 
 	
 });
 	
@@ -159,7 +229,7 @@ $(function() {
 			<button type="submit">작성완료</button>
 			<button type="reset">초기화</button>
 		</div>
-			
+
 	</form>
 	
 	<div class="bigPictureWrapper">
