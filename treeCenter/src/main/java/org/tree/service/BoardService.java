@@ -15,5 +15,6 @@ public interface BoardService {
 	public int getTotal(Criteria cri);
 	public boolean update(BoardVO board);
 	public boolean delete(int b_code);
+	public List<String> getAuto(String term);
 	
 }

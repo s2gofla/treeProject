@@ -80,4 +80,16 @@ public class BoardServiceImpl implements BoardService {
 		return mapper.delete(b_code) == 1;
 	}
 
+
+	@Override
+	public List<String> getAuto(String term) {
+		log.info("자동완성 service접속.....");
+		log.info("값 받아와야지..." + mapper.getWord(term));
+		
+		List<String> list = mapper.getWord(term);
+		
+		
+		return list;
+	}
+
 }

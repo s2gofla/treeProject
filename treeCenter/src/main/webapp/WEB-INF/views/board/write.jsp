@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+ <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
@@ -193,12 +193,83 @@ $(function() {
 			formObj.append(str).submit();
 	 });
 	 
+	 //ckeditor 사용
+	 
+	 //var csrfHeaderName = "${_csrf.headerName}";
+	 //var csrfTokenValue = "${_csrf.token}"
 	
-});
+	 CKEDITOR.replace('ckeditor', {
+		 
+		 filebrowserUploadUrl : '/uploadAjaxAction?type=Images'
+
+		 ,fileTools_requestHeaders: {
+		            '${_csrf.headerName}': '{${_csrf.token}}',
+		        }
+	 });
+
+
+	
+	 
+	 CKEDITOR.on('dialogDefinition', function (ev) {
+			var dialogName = ev.data.name;
+			var dialogDefinition = ev.data.definition;
+			
+			switch (dialogName) {
+			case 'image': //이미지 속성
+				dialogDefinition.removeContents('Link');
+				dialogDefinition.removeContents('advanced');
+				
+				break;
+
+			} 
+			
+	 });
+	 
+	 
+	 
+	 $(document).ready(function(){  
+		   CKEDITOR.on('dialogDefinition', function(ev) {
+		    var dialogName = ev.data.name;
+		    var dialogDefinition = ev.data.definition;
+		 
+		    if(dialogName == 'image') {
+		     var uploadTab = dialogDefinition.getContents('Upload');
+		 
+		     for (var i =0; i < uploadTab.elements.length; i++)
+		     {
+		      var el = uploadTab.elements[i];
+		      if(el.type != 'fileButton') {
+		       continue;
+		      }
+		 
+		      var onClick = el.onClick;
+		 
+		      el.onClick = function(evt){
+		       var dialog = this.getDialog();
+		       var fb = dialog.getContentElement(this['for'][0], this['for'][1]);
+		       var action = fb.getAction();
+		       var editor = dialog.getParentEditor();
+		       editor._.filebrowserSe = this;
+		 
+		       $(fb.getInputElement().getParent().$).append('<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>" />');
+		 
+		       if(onClick && onClick.call(evt.sender, evt) === false) {
+		        return false;
+		       }
+		       return true;
+		      };
+		     }
+		    }
+		   });
+		  });
+
+	 
+})
 	
 	
 
 </script>
+<script src="/resources/ckeditor/ckeditor.js"></script>
 <!-- Table -->
 <h2>글쓰기</h2>
 
@@ -216,7 +287,7 @@ $(function() {
 			</div>			
 			<div>
 				<label>text area</label>
-				<textarea rows="3" name="b_content"></textarea>
+				<textarea rows="3" id="ckeditor" name="b_content"></textarea>
 			</div>
 			<div class="uploadDiv">
 				<input type="file" name="uploadFile" multiple />

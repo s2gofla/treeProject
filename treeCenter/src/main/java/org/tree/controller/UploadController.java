@@ -4,6 +4,7 @@ package org.tree.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
@@ -12,6 +13,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
@@ -24,6 +29,8 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.tree.domain.AttachFileDTO;
@@ -37,9 +44,11 @@ import net.coobird.thumbnailator.Thumbnailator;
 @Log4j
 public class UploadController {
 	
+	
+	/*
 	@PostMapping(value="/uploadAjaxAction", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@ResponseBody
-	public ResponseEntity<List<AttachFileDTO>> uploadAjaxPost(MultipartFile[] uploadFile) {
+	public ResponseEntity<List<AttachFileDTO>> uploadAjaxPost( MultipartFile[] uploadFile) {
 		
 		log.info("upload Ajax");
 			
@@ -104,8 +113,49 @@ public class UploadController {
 		return new ResponseEntity<>(list, HttpStatus.OK);
 		
 	}
+	*/
+	
+	@RequestMapping(value = "/uploadAjaxAction")
+	public void imageUpload(HttpServletRequest request, HttpServletResponse response, @RequestParam MultipartFile upload) {
+	
+		HttpSession session = request.getSession();
+		String root_path = session.getServletContext().getRealPath("/"); //웹서비스 root
+		String attach_path = "/resources/upload";
+		
+		
+		
+		
+		log.info("root_path :"+root_path);
+		
+		
+		String fileName = upload.getOriginalFilename();
+		String fileUrl = "";
+		String message = "";
+		
+		try {
+			File file = new File("C:\\upload",fileName);
+			log.info("저장경로 : "+root_path+attach_path+fileName);
+			upload.transferTo(file);
+			fileUrl ="/resources/upload"+fileName;
+			message = "업로드 성공";
+			
+			PrintWriter printWriter = response.getWriter();
+			printWriter.println("{\"filename\":\""+fileName+"\", \"uploaded\" : 1, \"url\" :\""+fileUrl+"\"}");
+			printWriter.flush();
+			
+			
+		} catch (IllegalStateException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+		
+	}
 	
 	
+
 	//섬네일 처리
 	@GetMapping("/display")
 	@ResponseBody

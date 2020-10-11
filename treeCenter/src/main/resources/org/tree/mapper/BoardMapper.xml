@@ -78,4 +78,9 @@
   	<delete id="delete">
   		delete from board where b_code = #{b_code}
   	</delete>
+  	
+  	<select id="getWord" resultType="String">
+  		select b_title from board where b_title like '%' ||#{term}||'%'
+  	</select>
+  	
   </mapper>

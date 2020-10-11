@@ -1,9 +1,34 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<style>
+.comboBox {
+	background: white;
+	list-style: none;
+
+}
+
+.comboBox:hover {
+	
+	background-color: green;
+	color:white;
+	cursor: pointer;
+	
+	
+}
+</style>
 <script type="text/javascript">
 	$(function() {
+		
+		
+
+		//csrf처리
+		var csrfHeaderName = "${_csrf.headerName}";
+		var csrfTokenValue = "${_csrf.token}";
+		
+		$(document).ajaxSend(function (e, xhr, options) {
+			xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+		});
 		
 		$('#writeBtn').on("click", function(){
 			self.location = "/board/write";
@@ -70,6 +95,56 @@
 			searchForm.submit();
 		});
 		
+		
+		//자동완성 ajax
+		$("#query").autocomplete({
+			
+			
+			source : function(request, response) {
+				
+				$.ajax({
+					type : 'post',
+					url: "/searchJson",
+					dataType : "json",
+					data : {"keyword" : $("#query").val()},
+					success : function(data) {
+						response (
+						$.map(data, function(item){
+							
+							console.log(data);
+							console.log(item);
+							
+							return {
+							
+								label : item,
+								value : item
+							};
+						})
+						
+					  );
+					},
+					error: function () {
+						alert("통신 실패");
+					}
+					
+				});
+				
+				
+			}
+			, minlength : 1
+			, autoFocus : true
+			, select : function(evt, ui) {
+	            console.log("셀렉 이벤트 발생");
+	        }
+	        , focus : function(evt, ui) {
+	            return false;
+	        }
+		}).autocomplete( "instance" )._renderItem = function( ul, item ) {    //요 부분이 UI를 마음대로 변경하는 부분
+            return $( "<li class='comboBox'>" )    //기본 tag가 li로 되어 있음 
+            .append(item.value)    //여기에다가 원하는 모양의 HTML을 만들면 UI가 원하는 모양으로 변함.
+            .appendTo( ul );
+     };
+		
 	});
 	
 </script>
@@ -133,6 +208,8 @@
 	</select>
 		<input type="text" name="keyword" id="query" placeholder="Search" value='<c:out value="${pageMaker.cri.keyword}"/>'/>
 		<button class="button primary icon solid fa-search">Search</button>
+		<div class="instance">
+		</div>
 		<input type="hidden" name="pageNum" value='<c:out value="${pageMaker.cri.pageNum }"/>' />
 		<input type="hidden" name="amount" value='<c:out value="${pageMaker.cri.amount }"/>' />
 	</form>

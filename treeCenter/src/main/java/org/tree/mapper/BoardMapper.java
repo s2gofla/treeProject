@@ -26,4 +26,8 @@ public interface BoardMapper {
 	
 	//페이지 총갯수
 	public int getTotalCount(Criteria cri);
+	
+	
+	//자동완성 검색기능
+	public List<String> getWord(String term);
 }
