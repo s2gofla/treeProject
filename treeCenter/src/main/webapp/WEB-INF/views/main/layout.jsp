@@ -7,12 +7,14 @@
 		<title>Editorial by HTML5 UP</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		
+		<meta id="_csrf" name="_csrf" content="${_csrf.token}"/>
+		<meta id="_csrf_header" name="_csrf_header" content="${_csrf.headerName}"/>
 		<!--bootstrap  -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<link rel="stylesheet" href="/resources/assets/css/main.css?var=10" />
 		<script src="/resources/js/jquery-3.5.1.min.js"></script>
 		<script type="text/javascript" src="/resources/js/jquery-ui.js"></script>
+
 
 	</head>
 	<body class="is-preload">

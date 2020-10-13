@@ -4,7 +4,10 @@
 <%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"%>
 <script
   src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+ <script src="/resources/ckeditor/ckeditor.js"></script> 
+ <script src="/resources/ckeditor/adapters/jquery.js"></script> 
 <script>
+
 
 	//원본이미지 보여주기
 	function showImage(fileCallPath) {
@@ -47,13 +50,7 @@ $(function() {
 	}
 	
 	 
-	//csrf처리
-	var csrfHeaderName = "${_csrf.headerName}";
-	var csrfTokenValue = "${_csrf.token}";
-	
-	$(document).ajaxSend(function (e, xhr, options) {
-		xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
-	});
+
 	 
 	var cloneObj =$(".uploadDiv").clone();
 	
@@ -195,24 +192,37 @@ $(function() {
 	 
 	 //ckeditor 사용
 	 
-	 //var csrfHeaderName = "${_csrf.headerName}";
-	 //var csrfTokenValue = "${_csrf.token}"
+	var token = $("meta[name='_csrf']").attr("content");
+	var header = $("meta[name='_csrf_header']").attr("content");
+	console.log(header);
+	console.log(token);
+	
+	
+	$(document).ajaxSend(function (e, xhr, options) {
+		xhr.setRequestHeader(header, token);
+	});
+	
+	$.ajaxSetup({
+        headers: {
+            header : token
+        }
+    });
+	
 	
 	 CKEDITOR.replace('ckeditor', {
 		 
-		 filebrowserUploadUrl : '/uploadAjaxAction?type=Images'
-
-		 ,fileTools_requestHeaders: {
-		            '${_csrf.headerName}': '{${_csrf.token}}',
-		        }
+		 filebrowserImageUploadUrl: "<c:url value='/uploadAjaxAction?type=Images&'/>${_csrf.parameterName}=${_csrf.token}"
+		 
 	 });
 
 
-	
+
+
 	 
 	 CKEDITOR.on('dialogDefinition', function (ev) {
 			var dialogName = ev.data.name;
 			var dialogDefinition = ev.data.definition;
+
 			
 			switch (dialogName) {
 			case 'image': //이미지 속성
@@ -224,52 +234,14 @@ $(function() {
 			} 
 			
 	 });
-	 
-	 
-	 
-	 $(document).ready(function(){  
-		   CKEDITOR.on('dialogDefinition', function(ev) {
-		    var dialogName = ev.data.name;
-		    var dialogDefinition = ev.data.definition;
-		 
-		    if(dialogName == 'image') {
-		     var uploadTab = dialogDefinition.getContents('Upload');
-		 
-		     for (var i =0; i < uploadTab.elements.length; i++)
-		     {
-		      var el = uploadTab.elements[i];
-		      if(el.type != 'fileButton') {
-		       continue;
-		      }
-		 
-		      var onClick = el.onClick;
-		 
-		      el.onClick = function(evt){
-		       var dialog = this.getDialog();
-		       var fb = dialog.getContentElement(this['for'][0], this['for'][1]);
-		       var action = fb.getAction();
-		       var editor = dialog.getParentEditor();
-		       editor._.filebrowserSe = this;
-		 
-		       $(fb.getInputElement().getParent().$).append('<input type="hidden" name="<?= $this->security->get_csrf_token_name() ?>" value="<?= $this->security->get_csrf_hash() ?>" />');
-		 
-		       if(onClick && onClick.call(evt.sender, evt) === false) {
-		        return false;
-		       }
-		       return true;
-		      };
-		     }
-		    }
-		   });
-		  });
 
 	 
-})
+});
 	
 	
 
 </script>
-<script src="/resources/ckeditor/ckeditor.js"></script>
+
 <!-- Table -->
 <h2>글쓰기</h2>
 

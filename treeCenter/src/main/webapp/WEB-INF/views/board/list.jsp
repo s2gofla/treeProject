@@ -17,18 +17,10 @@
 	
 }
 </style>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script type="text/javascript">
 	$(function() {
 		
-		
-
-		//csrf처리
-		var csrfHeaderName = "${_csrf.headerName}";
-		var csrfTokenValue = "${_csrf.token}";
-		
-		$(document).ajaxSend(function (e, xhr, options) {
-			xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
-		});
 		
 		$('#writeBtn').on("click", function(){
 			self.location = "/board/write";
@@ -144,6 +136,48 @@
             .append(item.value)    //여기에다가 원하는 모양의 HTML을 만들면 UI가 원하는 모양으로 변함.
             .appendTo( ul );
      };
+     
+     
+     //ajax 토큰 처리
+     
+		var token = $("meta[name='_csrf']").attr("content");
+		var header = $("meta[name='_csrf_header']").attr("content");
+		$(function() {
+		    $(document).ajaxSend(function(e, xhr, options) {
+		         xhr.setRequestHeader(header,token);
+		    });
+		});
+     
+     
+
+    
+     //axios crsf토큰 처리
+    if (token) {
+    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
+    console.log(token);
+	} else {
+    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+	}
+     
+    //정렬 axios처리 
+     $("#sort").on('change', function () {
+		
+    	 var sortValue = $(this).find("option:selected").val();
+    	 console.log("sort값" + sortValue);
+    	 var params = new URLSearchParams();
+         params.append('sortValue', sortValue);
+
+    	 axios.post('/board/listAjax', params).then(function (response) {
+			console.log(response);
+			console.log("성공");
+		}).catch(function(error) {
+			console.log(error);
+		});
+    	 
+	});
+     
+
+		
 		
 	});
 	
@@ -152,6 +186,18 @@
 <h2>자유게시판</h2>
 
 <h4>자유롭게 글을 쓰세요</h4>
+
+<!-- sort -->
+
+<div class="selectBox" style="margin-bottom: 20px; width: 30%;">
+	<select name="sort" id="sort">
+    <option value="" selected="selected">정렬선택</option>
+    <option value="list">목록형</option>
+    <option value="thumnail">이미지형</option>
+</select>
+</div>
+
+
 <!--board  -->
 <table>
 	<thead>
