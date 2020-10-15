@@ -160,6 +160,7 @@
 	}
      
     //정렬 axios처리 
+    /*
      $("#sort").on('change', function () {
 		
     	 var sortValue = $(this).find("option:selected").val();
@@ -176,8 +177,48 @@
     	 
 	});
      
-
+	*/
 		
+	//목록형 이미지형 구분
+	
+	var option = $(".selectBox option:selected").val();
+	
+	if (option === 'thumnail') {
+		$(".listBox").hide();
+		$(".imageBox").show();
+		$("input[name=optionType]").val("thumnail");
+		
+	}else {
+		
+		$(".listBox").show();
+		$(".imageBox").hide();
+		$("input[name=optionType]").val("list");
+		console.log($("input[name=optionType]").val());	
+	}
+	
+	
+	
+	//목록 옵션 선택할때
+	$(".selectBox").on("change", function() {
+		var option = $(".selectBox option:selected").val();
+		option === 'thumnail' ? console.log("yes") : console.log("no");
+		
+		if (option === 'thumnail') {
+			$(".listBox").hide();
+			$(".imageBox").show();
+			$("input[name=optionType]").val("thumnail");
+			console.log($("input[name=optionType]").val());
+		}else {
+			
+			$(".listBox").show();
+			$(".imageBox").hide();
+			$("input[name=optionType]").val("list");
+			console.log($("input[name=optionType]").val());
+			
+		}
+		
+	});
+	
 		
 	});
 	
@@ -191,15 +232,14 @@
 
 <div class="selectBox" style="margin-bottom: 20px; width: 30%;">
 	<select name="sort" id="sort">
-    <option value="" selected="selected">정렬선택</option>
-    <option value="list">목록형</option>
-    <option value="thumnail">이미지형</option>
+    <option value="list" <c:out value="${option eq 'list' ? 'selected' : '' }"/>>목록형</option>
+    <option value="thumnail" <c:out value="${option == 'thumnail' ? 'selected' : '' }"/>>이미지형</option>
 </select>
 </div>
 
 
 <!--board  -->
-<table>
+<table class="listBox">
 	<thead>
 		<tr>
 			<th>글번호</th>
@@ -222,6 +262,24 @@
 	</c:forEach>	
 	</tbody>	
 </table>
+
+<!-- board image -->
+<div class="flex imageBox" style="flex-flow : wrap; display: none;">
+	<c:forEach items="${list }" var="board">
+		<div class="margin" style="margin: 20px; width: 200px">
+			<div style="width: 100%"><img  src="/resources/images/pic01.jpg" style="width: 100%"></div>
+			<div>${board.b_code }</div>
+			<div><a  class='move' href='<c:out value="${board.b_code }"/>'>${board.b_title }</a></div>
+			<div>${board.username }</div>			
+			<div><fmt:formatDate pattern="yyyy-MM-dd"
+				value="${board.b_regdate }" /></div>
+			<div>${board.b_hit }</div>
+		</div>
+	</c:forEach>		
+</div>
+
+
+
 	<button class="button primary small" id="writeBtn">글쓰기</button>
 <!-- 페이징 -->
 
@@ -256,12 +314,13 @@
 		<button class="button primary icon solid fa-search">Search</button>
 		<div class="instance">
 		</div>
+		<input type="hidden" name="optionType" value="list" />
 		<input type="hidden" name="pageNum" value='<c:out value="${pageMaker.cri.pageNum }"/>' />
 		<input type="hidden" name="amount" value='<c:out value="${pageMaker.cri.amount }"/>' />
 	</form>
 	
 	<form id="actionForm" action="/board/list" method="get">
-		
+		<input type="hidden" name="optionType" value="list" />
 		<input type="hidden" name="type" value='<c:out value="${pageMaker.cri.type }"/>' />
 		<input type="hidden" name="keyword" value='<c:out value="${pageMaker.cri.keyword }"/>' />
 		<input type="hidden" name="pageNum" value='<c:out value="${pageMaker.cri.pageNum }"/>' />
